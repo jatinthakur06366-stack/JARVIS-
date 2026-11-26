@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050b18">
+<meta name="description" content="Personal JARVIS AI voice assistant">
+<link rel="manifest" href="manifest.json">
+<title>J.A.R.V.I.S.</title>
+<style>
+:root{color-scheme:dark;--cyan:#55dfff;--blue:#168bff;--bg:#050b18;--panel:#0a1830}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 34%,#102b50 0,#071326 42%,#030711 100%);color:#e9f8ff;font-family:system-ui,Arial,sans-serif;min-height:100vh}
+main{max-width:760px;margin:auto;min-height:100vh;padding:22px 18px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center}
+header{width:100%;display:flex;justify-content:space-between;align-items:center;letter-spacing:3px;font-size:12px;color:#83dfff}
+.status{font-size:10px;letter-spacing:1px;color:#72e7ff;border:1px solid #1b638a;padding:7px 10px;border-radius:30px}
+h1{font-size:clamp(27px,7vw,42px);letter-spacing:7px;margin:25px 0 4px;text-shadow:0 0 18px #1aaeff}
+.sub{font-size:10px;letter-spacing:4px;color:#76b9d5}
+.core-wrap{position:relative;width:min(70vw,285px);height:min(70vw,285px);margin:34px auto 22px;display:grid;place-items:center}
+.core{width:54%;height:54%;border-radius:50%;background:radial-gradient(circle,#d7fbff 0,#63dfff 9%,#168bff 28%,#092e64 57%,#06142a 72%);box-shadow:0 0 22px #39caff,0 0 65px #087eff, inset 0 0 25px #b8f5ff;animation:pulse 3s ease-in-out infinite}
+.ring{position:absolute;inset:4%;border:1px solid #35caff;border-radius:50%;box-shadow:0 0 18px #168bff,inset 0 0 15px #168bff;animation:spin 18s linear infinite}
+.ring:before,.ring:after{content:"";position:absolute;inset:9%;border:1px dashed #49bfff;border-radius:50%}
+.ring:after{inset:-7%;border-color:#1c75c6;transform:rotate(35deg)}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(1.08);filter:brightness(1.3)}}
+body.listening .core{animation:pulse .7s infinite}body.listening .ring{animation-duration:3s}
+#state{font-size:11px;letter-spacing:3px;color:#79dfff;margin-bottom:18px}
+.panel{width:100%;background:#07172bd9;border:1px solid #17466a;border-radius:16px;padding:14px;box-shadow:0 0 25px #00172e}
+#log{height:190px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.msg{font-size:14px;line-height:1.5;padding:10px 12px;border-radius:12px;max-width:92%;white-space:pre-wrap}
+.user{align-self:flex-end;background:#103d61}.jarvis{align-self:flex-start;background:#0b263b;border:1px solid #174b68}
+.controls{display:flex;gap:10px;width:100%;margin-top:14px}
+button,input{font:inherit}button{border:1px solid #2389bd;color:#dffaff;background:linear-gradient(180deg,#10416a,#09223d);border-radius:12px;padding:13px 14px;font-weight:650}
+button:active{transform:scale(.98)}#talk{flex:1;border-radius:40px;background:linear-gradient(120deg,#0878c9,#0b3159);box-shadow:0 0 22px #087bcb}
+.settings{width:100%;margin-top:14px;background:#07172b;border:1px solid #17466a;border-radius:14px;padding:12px}
+summary{color:#8edfff;font-size:13px;cursor:pointer}label{display:block;color:#9bc6d8;font-size:12px;margin:12px 0 5px}
+input{width:100%;border:1px solid #1c5273;border-radius:9px;background:#030d1c;color:white;padding:11px}
+.small{font-size:11px;color:#8da9ba;line-height:1.5;margin-top:10px}
+footer{margin-top:auto;padding-top:18px;color:#537d98;font-size:10px;letter-spacing:2px}
+</style>
+</head>
+<body>
+<main>
+<header><span>STARK INDUSTRIES // PERSONAL AI</span><span class="status" id="conn">OFFLINE</span></header>
+<h1>J.A.R.V.I.S.</h1><div class="sub">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
+<div class="core-wrap"><div class="ring"></div><div class="core"></div></div>
+<div id="state">SYSTEM STANDBY</div>
+<section class="panel" aria-label="Conversation"><div id="log"><div class="msg jarvis">Good day. JARVIS interface initialized. Add your Gemini API key in Settings, then tap the microphone to speak.</div></div></section>
+<div class="controls"><button id="talk">🎙 TAP TO SPEAK</button><button id="stop">■</button></div>
+<details class="settings" open>
+<summary>⚙ SETTINGS & CONNECTION</summary>
+<label for="key">Gemini API key (kept only for this browser session)</label>
+<input id="key" type="password" autocomplete="off" placeholder="Paste your Gemini API key">
+<label for="voice">Voice preference</label>
+<select id="voice" style="width:100%;padding:10px;border-radius:9px;background:#030d1c;color:white;border:1px solid #1c5273">
+<option value="male">Male-sounding voice (if installed)</option><option value="any">Default voice</option>
+</select>
+<button id="save" style="margin-top:10px;width:100%">CONNECT GEMINI</button>
+<div class="small">Prototype warning: a browser-based API key can be inspected by someone with access to this device or app. Keep this project private, set usage limits, and never publish your key or commit it to GitHub. For a public app, move Gemini requests to a secure backend.</div>
+</details>
+<footer>JARVIS // MOBILE PROTOTYPE 01</footer>
+</main>
+<script>
+const $=s=>document.querySelector(s), log=$('#log');
+let apiKey='', listening=false, recognition=null, history=[];
+function add(text,who='jarvis'){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight}
+function state(t){$('#state').textContent=t}
+function speak(text){
+ if(!('speechSynthesis'in window))return;
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=.92;u.pitch=.78;
+ const voices=speechSynthesis.getVoices();
+ if($('#voice').value==='male'){
+   const candidates=voices.filter(v=>/en/i.test(v.lang)&&/male|david|mark|daniel|james|guy|aaron|fred/i.test(v.name));
+   if(candidates.length)u.voice=candidates[0];
+ }
+ speechSynthesis.speak(u);
+}
+async function ask(text){
+ if(!apiKey){add('Please add your Gemini API key in Settings first.');return}
+ history.push({role:'user',parts:[{text}]});state('THINKING...');
+ try{
+  const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key='+encodeURIComponent(apiKey),{
+   method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({systemInstruction:{parts:[{text:'You are JARVIS, a concise, polite, intelligent personal assistant. Address the user respectfully as sir occasionally, not in every sentence. Speak naturally. Never claim to have performed phone actions unless the app actually did them. If asked to open an app, explain that this prototype can open supported web links only.'}]},contents:history.slice(-12),generationConfig:{temperature:.7,maxOutputTokens:500}})
+  });
+  const data=await r.json();if(!r.ok)throw new Error(data.error?.message||'Gemini request failed');
+  const answer=data.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('').trim()||'I could not generate a response.';
+  history.push({role:'model',parts:[{text:answer}]});add(answer);speak(answer);state('SYSTEM READY');
+ }catch(e){add('Connection error: '+e.message);state('CONNECTION ERROR')}
+}
+function startListening(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){add('Speech recognition is not available in this browser. Try Chrome and check microphone permission.');return}
+ if(listening)return;
+ recognition=new SR();recognition.lang='en-IN';recognition.interimResults=false;recognition.maxAlternatives=1;
+ recognition.onstart=()=>{listening=true;document.body.classList.add('listening');state('LISTENING...')};
+ recognition.onresult=e=>{const text=e.results[0][0].transcript;add(text,'user');ask(text)};
+ recognition.onerror=e=>{add('Microphone: '+e.error);state('SYSTEM READY')};
+ recognition.onend=()=>{listening=false;document.body.classList.remove('listening');if($('#state').textContent==='LISTENING...')state('SYSTEM READY')};
+ recognition.start();
+}
+$('#talk').addEventListener('click',startListening);
+$('#stop').addEventListener('click',()=>{if(recognition)recognition.stop();speechSynthesis.cancel();state('SYSTEM READY')});
+$('#save').addEventListener('click',()=>{apiKey=$('#key').value.trim();$('#conn').textContent=apiKey?'KEY ADDED':'NO KEY';state(apiKey?'READY TO ASSIST':'ADD API KEY');if(apiKey)add('Gemini key entered for this session. Tap the microphone to begin.');});
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+if('speechSynthesis'in window)speechSynthesis.getVoices();
+</script>
+</body></html>
