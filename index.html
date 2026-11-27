@@ -231,36 +231,36 @@ function speak(t){
  speechSynthesis.speak(u);
 }
 function reply(t){add("JARVIS",t);speak(t)}
-function send(){
- let t=input.value.trim();
- if(!t)return;
- input.value="";
- add("YOU",t);
- let q=t.toLowerCase();
- if(q.includes("hello")||q.includes("hi")){
-  reply("Hello. JARVIS systems are online.");
- }else if(q.includes("your name")||q.includes("who are you")){
-  reply("I am JARVIS, your personal assistant.");
- }else if(q.includes("time")){
-  reply("Current time is "+new Date().toLocaleTimeString());
- }else if(q.includes("date")){
-  reply("Today is "+new Date().toLocaleDateString());
- }else if(q.includes("youtube")){
-  reply("Opening YouTube.");
-  window.open("https://youtube.com","_blank");
- }else if(q.includes("google")){
-  reply("Opening Google.");
-  window.open("https://google.com","_blank");
- }else if(q.includes("how are you")){
-  reply("All systems are functioning normally.");
- }else{
-  reply("My AI brain is not connected yet. Please configure a secure AI backend.");
- }
-}
-input.addEventListener("keydown",e=>{
- if(e.key==="Enter")send();
-});
+async function send(){
+  let t = input.value.trim();
+  if(!t) return;
 
+  input.value = "";
+  add("YOU", t);
+
+  try {
+    const response = await fetch(
+      "https://jarvis-backend-dane.onrender.com/chat",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: t })
+      }
+    );
+
+    const data = await response.json();
+
+    if(!response.ok) {
+      throw new Error(data.error || "Server error");
+    }
+
+    reply(data.reply);
+  } catch(error) {
+    reply("Connection error. Please try again.");
+  }
+}
 function listen(){
  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
  if(!SR){reply("Voice recognition is not supported in this browser.");return}
