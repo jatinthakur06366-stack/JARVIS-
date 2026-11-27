@@ -3,172 +3,204 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>J.A.R.V.I.S. | AI System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J.A.R.V.I.S.</title>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;background:#020812;color:#bceeff;
- font-family:Arial,sans-serif;min-height:100vh;
- overflow-x:hidden;
- background-image:radial-gradient(ellipse at center,#09233a 0%,#020812 65%);
+ margin:0;background:#020914;color:#8ceaff;
+ font-family:Arial,sans-serif;
+ background-image:radial-gradient(ellipse,#0b2940,#020914 75%);
 }
 header{
- display:flex;justify-content:space-between;align-items:center;
- padding:18px 20px;border-bottom:1px solid #12466b;
- letter-spacing:3px;font-size:13px;
+ padding:20px;display:flex;justify-content:space-between;
+ border-bottom:1px solid #12608a;letter-spacing:3px;
 }
-.logo{color:#55dfff;font-weight:bold;font-size:19px}
-.status{font-size:10px;color:#ffbf58;letter-spacing:1px}
-main{max-width:850px;margin:auto;padding:20px}
-h1{text-align:center;font-size:25px;letter-spacing:6px;margin:24px 0 5px}
-.sub{text-align:center;color:#4689ad;font-size:10px;letter-spacing:4px}
-.reactor-area{
- height:340px;display:flex;align-items:center;justify-content:center;
+.logo{font-size:20px;font-weight:bold;color:#5de5ff}
+.status{font-size:11px;color:#65e8ff}
+main{max-width:800px;margin:auto;padding:20px}
+h1{text-align:center;letter-spacing:6px;font-size:27px}
+.sub{text-align:center;letter-spacing:4px;font-size:10px;color:#4c9fbe}
+.reactor{
+ height:360px;display:flex;align-items:center;justify-content:center;
  position:relative;
 }
 .ring{
- position:absolute;width:270px;height:270px;border-radius:50%;
- border:1px solid #1678a8;
- box-shadow:0 0 22px #0077aa55,inset 0 0 20px #0077aa22;
- animation:spin 18s linear infinite;
+ position:absolute;width:280px;height:280px;border-radius:50%;
+ border:2px solid #167ba0;
+ box-shadow:0 0 25px #00cfff33,inset 0 0 25px #00cfff22;
+ animation:rotate 18s linear infinite;
 }
 .ring:before,.ring:after{
- content:"";position:absolute;border:1px dashed #20b9ee88;
- border-radius:50%;inset:13px;
+ content:"";position:absolute;inset:15px;border-radius:50%;
+ border:1px dashed #31caff;
 }
-.ring:after{inset:28px;border-style:solid;border-color:#1c719b}
-.ring.two{width:310px;height:310px;border-style:dashed;animation:spin 28s linear infinite reverse}
-@keyframes spin{to{transform:rotate(360deg)}}
-.core{
- width:155px;height:155px;position:relative;
- display:flex;align-items:center;justify-content:center;
- filter:drop-shadow(0 0 13px #00cfff);
+.ring:after{inset:35px;border:2px solid #12577c}
+.ring2{
+ width:320px;height:320px;border-style:dashed;
+ animation:rotate 30s linear infinite reverse;
 }
-.core svg{width:100%;height:100%;overflow:visible}
-.core polygon{
- fill:#07334d;stroke:#54eaff;stroke-width:4;
- stroke-linejoin:round;
+@keyframes rotate{to{transform:rotate(360deg)}}
+
+.arc{
+ width:220px;height:220px;position:relative;
+ filter:drop-shadow(0 0 12px #00cfff);
+ animation:pulse 3s ease-in-out infinite;
 }
-.core .inner{fill:#0b8cbd;stroke:#a9f7ff;stroke-width:2}
-.core .center{fill:#c4faff;filter:drop-shadow(0 0 12px #4deaff)}
-.core.listening{filter:drop-shadow(0 0 25px #00eaff)}
-.core.listening polygon{fill:#075477}
-.info{text-align:center;font-size:11px;letter-spacing:3px;color:#58b8db}
+.arc svg{width:100%;height:100%;overflow:visible}
+@keyframes pulse{
+ 0%,100%{filter:drop-shadow(0 0 10px #00cfff)}
+ 50%{filter:drop-shadow(0 0 27px #00dfff)}
+}
+.metal{fill:url(#metal);stroke:#8bdfff;stroke-width:2}
+.edge{fill:none;stroke:#071725;stroke-width:8;stroke-linejoin:round}
+.glow{fill:url(#energy);stroke:#6af3ff;stroke-width:3}
+.segment{fill:#17415a;stroke:#6cddff;stroke-width:2}
+.bolt{fill:#b7f7ff;stroke:#157aa0;stroke-width:2}
+.center{fill:#e4ffff;filter:url(#shine)}
+.info{text-align:center;font-size:11px;letter-spacing:3px;margin:8px}
 .panel{
- border:1px solid #155477;background:#041522cc;
- border-radius:12px;padding:15px;margin-top:18px;
- box-shadow:0 0 20px #0077aa18;
+ margin-top:20px;padding:18px;border:1px solid #17658a;
+ border-radius:12px;background:#031725;
+ box-shadow:0 0 20px #00bfff16;
 }
-.panel-title{font-size:11px;letter-spacing:3px;color:#48cfff;margin-bottom:12px}
-#chat{
- height:155px;overflow-y:auto;font-size:14px;line-height:1.6;
-}
-.msg{margin:9px 0;overflow-wrap:anywhere}
-.user{color:#fff}
-.jarvis{color:#66dfff}
-.controls{display:flex;gap:9px;margin-top:12px}
+.heading{font-size:11px;letter-spacing:3px;margin-bottom:15px}
+#chat{height:150px;overflow:auto;font-size:14px;line-height:1.7}
+.msg{margin:8px 0;overflow-wrap:anywhere}
+.user{color:white}.jarvis{color:#67dfff}
+.controls{display:flex;gap:8px;margin-top:15px}
 input{
- flex:1;min-width:0;background:#020b14;color:white;
- border:1px solid #17628a;border-radius:8px;padding:13px;
- outline:none;
+ flex:1;min-width:0;background:#020c18;color:white;
+ border:1px solid #17658a;padding:13px;border-radius:7px;
 }
 button{
- background:#07334c;border:1px solid #1688b7;
- color:#9deaff;padding:12px 15px;border-radius:8px;
- cursor:pointer;font-weight:bold;letter-spacing:1px;
+ background:#073b59;border:1px solid #2bbde8;
+ color:#b9f5ff;padding:12px;border-radius:7px;
+ font-weight:bold;cursor:pointer;
 }
-button:active{background:#0d5878}
 .mic{width:100%;margin-top:12px;padding:15px}
-.footer{text-align:center;color:#285878;font-size:10px;letter-spacing:2px;padding:25px}
+footer{text-align:center;padding:25px;font-size:10px;letter-spacing:3px;color:#327b9e}
 @media(max-width:450px){
- .ring{width:235px;height:235px}
- .ring.two{width:270px;height:270px}
- .reactor-area{height:300px}
- .controls{flex-wrap:wrap}
- .controls input{flex-basis:100%}
- .controls button{flex:1}
+ .reactor{height:330px}
+ .ring{width:245px;height:245px}
+ .ring2{width:280px;height:280px}
+ .arc{width:195px;height:195px}
 }
 </style>
 </head>
 <body>
 <header>
  <div class="logo">J.A.R.V.I.S.</div>
- <div class="status" id="status">● CORE STANDBY</div>
+ <div class="status" id="status">● STANDBY</div>
 </header>
 
 <main>
- <h1>JARVIS SYSTEM</h1>
- <div class="sub">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
+<h1>JARVIS SYSTEM</h1>
+<div class="sub">ARTIFICIAL INTELLIGENCE INTERFACE</div>
 
- <div class="reactor-area">
-  <div class="ring"></div>
-  <div class="ring two"></div>
-  <div class="core" id="core">
-   <svg viewBox="0 0 200 200">
-    <polygon points="100,12 187,165 13,165"/>
-    <polygon class="inner" points="100,43 158,145 42,145"/>
-    <polygon class="center" points="100,76 121,113 79,113"/>
-   </svg>
-  </div>
+<div class="reactor">
+ <div class="ring"></div>
+ <div class="ring ring2"></div>
+
+ <div class="arc" id="arc">
+ <svg viewBox="0 0 220 220">
+ <defs>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+   <stop offset="0" stop-color="#b9f5ff"/>
+   <stop offset=".25" stop-color="#285a78"/>
+   <stop offset=".55" stop-color="#071c31"/>
+   <stop offset="1" stop-color="#75dfff"/>
+  </linearGradient>
+  <radialGradient id="energy">
+   <stop offset="0" stop-color="#eaffff"/>
+   <stop offset=".25" stop-color="#63eaff"/>
+   <stop offset=".65" stop-color="#087cae"/>
+   <stop offset="1" stop-color="#042b48"/>
+  </radialGradient>
+  <filter id="shine">
+   <feGaussianBlur stdDeviation="5"/>
+  </filter>
+ </defs>
+
+ <!-- Outer triangular armor -->
+ <polygon class="edge" points="110,10 211,190 9,190"/>
+ <polygon class="metal" points="110,12 207,187 13,187"/>
+ <polygon fill="#061b2c" stroke="#68dcff" stroke-width="3"
+ points="110,32 189,175 31,175"/>
+
+ <!-- Inner mechanical sections -->
+ <polygon class="segment" points="110,43 137,92 83,92"/>
+ <polygon class="segment" points="44,160 76,103 99,160"/>
+ <polygon class="segment" points="176,160 121,160 144,103"/>
+
+ <!-- Energy chamber -->
+ <polygon class="glow" points="110,70 157,154 63,154"/>
+ <polygon fill="#d7ffff" stroke="#ffffff" stroke-width="2"
+ points="110,91 137,140 83,140"/>
+ <circle class="center" cx="110" cy="119" r="7"/>
+
+ <!-- Reactor inner rings -->
+ <polygon fill="none" stroke="#8bf4ff" stroke-width="2"
+ points="110,56 170,162 50,162"/>
+
+ <!-- Mechanical bolts -->
+ <circle class="bolt" cx="110" cy="23" r="4"/>
+ <circle class="bolt" cx="23" cy="180" r="4"/>
+ <circle class="bolt" cx="197" cy="180" r="4"/>
+ <circle class="bolt" cx="64" cy="91" r="3"/>
+ <circle class="bolt" cx="156" cy="91" r="3"/>
+ </svg>
  </div>
- <div class="info" id="info">SYSTEM READY · AWAITING COMMAND</div>
+</div>
 
- <section class="panel">
-  <div class="panel-title">◈ COMMUNICATION TERMINAL</div>
-  <div id="chat">
-   <div class="msg jarvis">JARVIS: Good evening. Systems initialized.</div>
-   <div class="msg jarvis">JARVIS: AI connection is not configured yet.</div>
-  </div>
-  <div class="controls">
-   <input id="input" placeholder="Enter your command..." />
-   <button onclick="send()">SEND</button>
-  </div>
-  <button class="mic" onclick="listen()">🎙 ACTIVATE VOICE</button>
- </section>
+<div class="info" id="info">ARC REACTOR ONLINE</div>
 
- <div class="footer">STARK-STYLE INTERFACE · LOCAL SYSTEM</div>
+<div class="panel">
+ <div class="heading">◈ JARVIS COMMUNICATION TERMINAL</div>
+ <div id="chat">
+  <div class="msg jarvis">JARVIS: Good evening. Systems initialized.</div>
+  <div class="msg jarvis">JARVIS: AI brain is not connected yet.</div>
+ </div>
+ <div class="controls">
+  <input id="input" placeholder="Enter command...">
+  <button onclick="send()">SEND</button>
+ </div>
+ <button class="mic" onclick="listen()">🎙 ACTIVATE VOICE</button>
+</div>
+<footer>STARK-STYLE ARC REACTOR · SYSTEM READY</footer>
 </main>
 
 <script>
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
-const core=document.getElementById("core");
-const statusText=document.getElementById("status");
-const info=document.getElementById("info");
 
-function addMessage(who,text){
- const div=document.createElement("div");
- div.className="msg "+(who==="YOU"?"user":"jarvis");
- div.textContent=who+": "+text;
- chat.appendChild(div);
+function add(who,text){
+ let d=document.createElement("div");
+ d.className="msg "+(who==="YOU"?"user":"jarvis");
+ d.textContent=who+": "+text;
+ chat.appendChild(d);
  chat.scrollTop=chat.scrollHeight;
 }
-function speak(text){
- if(!("speechSynthesis" in window))return;
+function speak(t){
+ if(!window.speechSynthesis)return;
  speechSynthesis.cancel();
- const utter=new SpeechSynthesisUtterance(text);
- utter.lang="en-IN";
- utter.rate=1;
- speechSynthesis.speak(utter);
+ let u=new SpeechSynthesisUtterance(t);
+ u.lang="en-IN";
+ speechSynthesis.speak(u);
 }
-function reply(text){
- addMessage("JARVIS",text);
- speak(text);
-}
+function reply(t){add("JARVIS",t);speak(t)}
 function send(){
- const text=input.value.trim();
- if(!text)return;
+ let t=input.value.trim();
+ if(!t)return;
  input.value="";
- addMessage("YOU",text);
- const q=text.toLowerCase();
-
- if(q.includes("hello")||q.includes("hi jarvis")){
-  reply("Hello. I am online and ready for your commands.");
- }else if(q.includes("your name")||q.includes("who are you")){
-  reply("I am JARVIS, your personal assistant interface.");
+ add("YOU",t);
+ let q=t.toLowerCase();
+ if(q.includes("hello")||q.includes("hi")){
+  reply("Hello. JARVIS systems are online.");
+ }else if(q.includes("your name")){
+  reply("I am JARVIS, your personal assistant.");
  }else if(q.includes("time")){
-  reply("The current time is "+new Date().toLocaleTimeString());
+  reply("Current time is "+new Date().toLocaleTimeString());
  }else if(q.includes("date")){
   reply("Today is "+new Date().toLocaleDateString());
  }else if(q.includes("youtube")){
@@ -177,39 +209,29 @@ function send(){
  }else if(q.includes("google")){
   reply("Opening Google.");
   window.open("https://google.com","_blank");
- }else if(q.includes("how are you")){
-  reply("All systems are functioning normally.");
  }else{
-  reply("My AI brain is not connected yet. The interface and voice systems are ready, but an AI backend is still required to answer general questions.");
+  reply("My AI brain is not connected yet. Please configure a secure AI backend.");
  }
 }
 input.addEventListener("keydown",e=>{if(e.key==="Enter")send()});
 
 function listen(){
- const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
- if(!SpeechRecognition){
-  reply("Voice recognition is not supported in this browser.");
-  return;
- }
- const recognition=new SpeechRecognition();
- recognition.lang="en-IN";
- recognition.interimResults=false;
- core.classList.add("listening");
- statusText.textContent="● LISTENING";
- info.textContent="VOICE INPUT ACTIVE";
- recognition.onresult=e=>{
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){reply("Voice recognition is not supported.");return}
+ let r=new SR();
+ r.lang="en-IN";
+ document.getElementById("status").textContent="● LISTENING";
+ document.getElementById("info").textContent="VOICE INPUT ACTIVE";
+ r.onresult=e=>{
   input.value=e.results[0][0].transcript;
   send();
  };
- recognition.onerror=()=>{
-  info.textContent="VOICE INPUT UNAVAILABLE";
+ r.onerror=()=>{document.getElementById("info").textContent="VOICE ERROR"};
+ r.onend=()=>{
+  document.getElementById("status").textContent="● STANDBY";
+  document.getElementById("info").textContent="ARC REACTOR ONLINE";
  };
- recognition.onend=()=>{
-  core.classList.remove("listening");
-  statusText.textContent="● CORE STANDBY";
-  info.textContent="SYSTEM READY · AWAITING COMMAND";
- };
- recognition.start();
+ r.start();
 }
 </script>
 </body>
