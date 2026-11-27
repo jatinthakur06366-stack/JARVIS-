@@ -260,7 +260,12 @@ async function send(){
   } catch(error) {
     reply("Connection error. Please try again.");
   }
-}
+} 
+
+input.addEventListener("keydown",e=>{
+ if(e.key==="Enter")send();
+});
+
 function listen(){
  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
  if(!SR){reply("Voice recognition is not supported in this browser.");return}
