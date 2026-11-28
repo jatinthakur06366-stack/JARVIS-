@@ -489,8 +489,8 @@ async function sendMessage() {
     reply(data.reply || "I couldn't generate a response.");
 
   } catch (error) {
-    reply("I am unable to connect right now. Please check your API key and try again.");
-    console.error(error);
+  reply("Connection Error: " + error.message);
+  console.error("JARVIS ERROR:", error);
   }
 
   sendBtn.disabled = false;
